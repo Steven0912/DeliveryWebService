@@ -4,22 +4,22 @@
  * Created by PhpStorm.
  * User: DESARROLLO HAPPY INC
  * Date: 6/07/2017
- * Time: 9:19 AM
+ * Time: 11:46 AM
  */
 
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../DatabaseConnection/Database.php';
 
-class AssignedOrderDelivery
+class Product
 {
     function __construct()
     {
     }
 
-    public static function getAssignedOrderDeliveryById($id)
+    public static function getProductById($id)
     {
         // Consulta de un usuario en especifico
-        $query = "SELECT id_pedido FROM pedidos_asignados_domiciliario
-                             WHERE id_usuario_domiciliario = ?";
+        $query = "SELECT * FROM producto
+                             WHERE id = ?";
 
         try {
             // Preparar sentencia
@@ -36,5 +36,4 @@ class AssignedOrderDelivery
             return -1;
         }
     }
-
 }
