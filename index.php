@@ -7,8 +7,12 @@
  */
 
 require_once "APIS/UserAPI.php";
+require_once "APIS/OrderAPI.php";
 
 $userAPI = new UserAPI();
 $userAPI->API();
+
+$orderAPI = new OrderAPI();
+$orderAPI->API();
 
 
