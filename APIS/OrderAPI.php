@@ -123,9 +123,12 @@ class OrderAPI
                 isset($obj['fecha_mensaje']) &&
                 isset($obj['mensaje'])
             ) {
+
+                $timestamp = strtotime($obj['fecha_mensaje']);
+
                 $responseTicket = Ticket::validateIfStartTicketChat($obj['id_pedido'], $obj['id_origen'], $obj['id_destino']);
                 if (!$responseTicket) {
-                    $response = Ticket::createTicket($obj['id_pedido'], $obj['id_origen'], $obj['id_destino'], $obj['fecha_mensaje']);
+                    $response = Ticket::createTicket($obj['id_pedido'], $obj['id_origen'], $obj['id_destino'], date("Y-m-d H:i:s", $timestamp));
                     $responseTicket = Ticket::validateIfStartTicketChat($obj['id_pedido'], $obj['id_origen'], $obj['id_destino']);
                     if ($response) {
                         new Exceptions(200, "1", "Ticket registrado");
@@ -134,7 +137,11 @@ class OrderAPI
                     }
                 }
 
-                Ticket::createBitacoraTicket($responseTicket['id'], $obj['fecha_mensaje'], $obj['id_origen'], $obj['mensaje']);
+                Ticket::createBitacoraTicket($responseTicket['id'], date("Y-m-d H:i:s", $timestamp), $obj['id_origen'], $obj['mensaje']);
+                $response = Ticket::getBitacoraTickets();
+                $messagelist["state"] = 1;
+                $messagelist["orderslist"] = $response;
+                echo json_encode($messagelist, JSON_PRETTY_PRINT);
 
             } else {
                 new Exceptions(422, "error", "Alguna propiedad no esta definida o es incorrecta");

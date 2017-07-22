@@ -19,13 +19,13 @@ class Ticket
     {
         // Consulta de un usuario en especifico
         $query = "SELECT * FROM ticket
-                             WHERE id_pedido = ? and id_usuario_o = ? and id_usuario_d = ?";
+                             WHERE (id_pedido = ? and id_usuario_o = ? and id_usuario_d = ?) or (id_pedido = ? and id_usuario_o = ? and id_usuario_d = ?)";
 
         try {
             // Preparar sentencia
             $command = Database::getInstance()->getDb()->prepare($query);
             // Ejecutar sentencia preparada
-            $command->execute(array($id_pedido, $id_usuario_origen, $id_usuario_destino));
+            $command->execute(array($id_pedido, $id_usuario_origen, $id_usuario_destino, $id_pedido, $id_usuario_destino, $id_usuario_origen));
             // Capturar primera fila del resultado
             $row = $command->fetch(PDO::FETCH_ASSOC);
             return $row;
@@ -105,6 +105,22 @@ class Ticket
             );
 
             return true;
+
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    public static function getBitacoraTickets()
+    {
+        $query = "SELECT * FROM bitacora_ticket";
+        try {
+            // Preparar sentencia
+            $command = Database::getInstance()->getDb()->prepare($query);
+            // Ejecutar sentencia preparada
+            $command->execute();
+
+            return $command->fetchAll(PDO::FETCH_ASSOC);
 
         } catch (PDOException $e) {
             return false;
